@@ -8,4 +8,8 @@ function getStyles(errors, fieldName) {
   }
 }
 
-export { getStyles };
+function addSpaceInAWord(text = "") {
+  return text.toString().replace(/\d{4}(?=.)/g, "$& ");
+}
+
+export { getStyles, addSpaceInAWord };

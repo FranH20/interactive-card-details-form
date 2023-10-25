@@ -9,6 +9,10 @@ const Button = styled.button`
   border-radius: 0.5rem;
   font-size: var(--button-font-size);
   border: none;
+  cursor: pointer;
+  &:disabled {
+    background-color: var(--n-c-dark-grayish-violet);
+  }
 `;
 
 export { Button };

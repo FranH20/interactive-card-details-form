@@ -5,10 +5,9 @@ import styles from "@/styles/Home.module.css";
 import { Label } from "@/components/Label/Label";
 import { Input } from "@/components/Input/Input";
 import { Button } from "@/components/Button/Button";
-import { Form, Formik } from "formik";
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import { getStyles } from "@/utils/functionUtils";
-import { useState } from "react";
+import { addSpaceInAWord, getStyles } from "@/utils/functionUtils";
 
 const inter = Inter({ subsets: ["latin"] });
 const CreditCardSchema = Yup.object().shape({
@@ -21,7 +20,7 @@ const CreditCardSchema = Yup.object().shape({
     .max(9999999999999999n, "Must be exactly 16 characters")
     .required("Required"),
   expMonth: Yup.number().min(1, "Too short").max(12).required("Required"),
-  expYear: Yup.number().min(11, "Too short").max(12).required("Required"),
+  expYear: Yup.number().min(10, "Too short").max(99).required("Required"),
   cvc: Yup.number().min(100, "Too short").max(999).required("Required"),
 });
 
@@ -39,13 +38,36 @@ const SpanError = ({ errorName }) => {
   );
 };
 
-export default function Home() {
-  // const [cardName, setCardName] = useState("");
-  // const [cardNumber, setCardNumber] = useState(0);
-  // const [expMonth, setExpMonth] = useState(0);
-  // const [expYear, setExpYear] = useState(0);
-  // const [cvc, setCvc] = useState(0);
+const SubmitSuccessfull = () => {
+  return (
+    <div className={styles.successfull}>
+      <Image
+        alt="icon complete"
+        src="/images/icon-complete.svg"
+        width={0}
+        height={0}
+        style={{ width: "20%", height: "auto" }}
+      />
+      <h5>Thank you !</h5>
+      <span>We've added your card details</span>
+    </div>
+  );
+};
 
+export default function Home() {
+  const formik = useFormik({
+    initialValues: {
+      cardName: "",
+      cardNumber: "",
+      expMonth: "",
+      expYear: "",
+      cvc: "",
+    },
+    validationSchema: CreditCardSchema,
+    onSubmit: (values) => {
+      console.log(JSON.stringify(values, null, 2));
+    },
+  });
   return (
     <>
       <Head>
@@ -74,9 +96,14 @@ export default function Home() {
                   height={0}
                   style={{ width: "20%", height: "auto" }}
                 />
-                <p>{cardNumber || "0000 0000 0000 0000"}</p>
-                <span>{cardName || "Franklin Huichi"}</span>
-                <span>{`${expMonth || "00"}/${expYear || "00"}`}</span>
+                <p>
+                  {addSpaceInAWord(formik.values.cardNumber) ||
+                    "0000 0000 0000 0000"}
+                </p>
+                <span>{formik.values.cardName || "Franklin Huichi"}</span>
+                <span>{`${formik.values.expMonth || "00"}/${
+                  formik.values.expYear || "00"
+                }`}</span>
               </div>
             </picture>
             <picture className={styles.cardBack}>
@@ -90,40 +117,30 @@ export default function Home() {
                 style={{ width: "100%", height: "auto" }}
               />
               <div className={styles.cardBackContent}>
-                <p>{cvc || "000"}</p>
+                <p>{formik.values.cvc || "000"}</p>
               </div>
             </picture>
           </div>
         </aside>
         <aside className={styles.right}>
-          <Formik
-            initialValues={{
-              cardName: "",
-              cardNumber: "",
-              expMonth: "",
-              expYear: "",
-              cvc: "",
-            }}
-            validationSchema={CreditCardSchema}
-            onSubmit={(values) => {
-              console.log(values);
-            }}
-          >
-            {({ values, handleChange, handleBlur, touched, errors }) => (
-              <Form className={styles.cardForm}>
+          <form className={styles.cardForm} onSubmit={formik.handleSubmit}>
+            {formik.isSubmitting ? (
+              <SubmitSuccessfull />
+            ) : (
+              <>
                 <p>
                   <Label>Cardholder Name</Label>
                   <Input
                     name="cardName"
                     type="text"
                     placeholder="e.g. Franklin Huichi"
-                    value={values.cardName}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    style={getStyles(errors, "cardName")}
+                    value={formik.values.cardName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    style={getStyles(formik.errors, "cardName")}
                   />
-                  {touched.cardName && errors.cardName ? (
-                    <SpanError errorName={errors.cardName} />
+                  {formik.touched.cardName && formik.errors.cardName ? (
+                    <SpanError errorName={formik.errors.cardName} />
                   ) : null}
                 </p>
                 <p>
@@ -132,13 +149,13 @@ export default function Home() {
                     name="cardNumber"
                     type="number"
                     placeholder="e.g. 1234 5678 9123 0000"
-                    style={getStyles(errors, "cardNumber")}
-                    value={values.cardNumber}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
+                    style={getStyles(formik.errors, "cardNumber")}
+                    value={formik.values.cardNumber}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
-                  {touched.cardNumber && errors.cardNumber ? (
-                    <SpanError errorName={errors.cardNumber} />
+                  {formik.touched.cardNumber && formik.errors.cardNumber ? (
+                    <SpanError errorName={formik.errors.cardNumber} />
                   ) : null}
                 </p>
                 <p>
@@ -147,19 +164,19 @@ export default function Home() {
                     name="expMonth"
                     type="number"
                     placeholder="MM"
-                    value={values.expMonth}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    style={getStyles(errors, "expMonth")}
+                    value={formik.values.expMonth}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    style={getStyles(formik.errors, "expMonth")}
                   />
                   <Input
                     name="expYear"
                     type="number"
                     placeholder="YY"
-                    value={values.expYear}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    style={getStyles(errors, "expYear")}
+                    value={formik.values.expYear}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    style={getStyles(formik.errors, "expYear")}
                   />
                 </p>
                 <p>
@@ -168,16 +185,18 @@ export default function Home() {
                     name="cvc"
                     type="number"
                     placeholder="e.g. 123"
-                    value={values.cvc}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    style={getStyles(errors, "cvc")}
+                    value={formik.values.cvc}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    style={getStyles(formik.errors, "cvc")}
                   />
                 </p>
-                <Button type="submit">Confirm</Button>
-              </Form>
+              </>
             )}
-          </Formik>
+            <Button type="submit" disabled={formik.isSubmitting} style={{ height: '6rem'}}>
+              {!formik.isSubmitting ? "Confirm" : "Continue"}
+            </Button>
+          </form>
         </aside>
         {/* Thank you! We've added your card details Continue
         <div class="attribution">
