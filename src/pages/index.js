@@ -29,7 +29,7 @@ const SpanError = ({ errorName }) => {
     <span>
       {errorName}
       <Image
-        src="/images/icon-warning.svg"
+        src="/interactive-card-details-form/images/icon-warning.svg"
         alt="icon warning"
         width={12}
         height={12}
@@ -43,7 +43,7 @@ const SubmitSuccessfull = () => {
     <div className={styles.successfull}>
       <Image
         alt="icon complete"
-        src="/images/icon-complete.svg"
+        src="/interactive-card-details-form/images/icon-complete.svg"
         width={0}
         height={0}
         style={{ width: "20%", height: "auto" }}
@@ -81,7 +81,7 @@ export default function Home() {
           <div className={styles.creditCardContainer}>
             <picture className={styles.cardFront}>
               <Image
-                src="/images/bg-card-front.png"
+                src="/interactive-card-details-form/images/bg-card-front.png"
                 alt="creditcard front"
                 width={0}
                 height={0}
@@ -90,7 +90,7 @@ export default function Home() {
               />
               <div className={styles.cardFrontContent}>
                 <Image
-                  src="/images/card-logo.svg"
+                  src="/interactive-card-details-form/images/card-logo.svg"
                   alt="Logo"
                   width={0}
                   height={0}
@@ -108,7 +108,7 @@ export default function Home() {
             </picture>
             <picture className={styles.cardBack}>
               <Image
-                src="/images/bg-card-back.png"
+                src="/interactive-card-details-form/images/bg-card-back.png"
                 alt="creditcard back"
                 width={0}
                 height={0}
