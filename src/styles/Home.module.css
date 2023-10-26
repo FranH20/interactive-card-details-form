@@ -10,7 +10,7 @@
     var(--p-c-purple) 0%,
     var(--p-c-blue) 100%
   ); */
-  background:  no-repeat url('/interactive-card-details-form/images/bg-main-mobile.png');
+  background:  no-repeat url('https://i.imgur.com/QhBqZLR.png');
   background-size: cover;
   padding: 0 2rem;
 }
@@ -161,7 +161,7 @@
     height: 100%;
   }
   .left {
-    background:  no-repeat url('/interactive-card-details-form/images/bg-main-desktop.png');
+    background:  no-repeat url('https://i.imgur.com/FH5GMIg.png');
     background-size: cover;
     width: 35%;
     max-width: 55rem;
